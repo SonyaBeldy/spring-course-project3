@@ -9,10 +9,10 @@ public class Sensor {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     public Sensor() {
     }
