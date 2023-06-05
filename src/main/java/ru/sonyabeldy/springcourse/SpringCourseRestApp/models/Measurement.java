@@ -12,8 +12,11 @@ public class Measurement {
     @Column(name = "id")
     private int id;
 
+    @Column(name = "value")
+    private double value;
+
     @Column(name = "is_raining")
-    @NotEmpty(message = "Raining should not be empty")
+//    @NotEmpty(message = "Raining should not be empty")
     private boolean isRaining;
 
     @ManyToOne
@@ -21,12 +24,6 @@ public class Measurement {
     private Sensor owner;
 
     public Measurement() {
-    }
-
-    public Measurement(int id, boolean isRaining, Sensor owner) {
-        this.id = id;
-        this.isRaining = isRaining;
-        this.owner = owner;
     }
 
     public int getId() {
@@ -51,5 +48,13 @@ public class Measurement {
 
     public void setOwner(Sensor owner) {
         this.owner = owner;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
     }
 }
