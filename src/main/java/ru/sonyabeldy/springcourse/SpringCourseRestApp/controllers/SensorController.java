@@ -12,6 +12,7 @@ import ru.sonyabeldy.springcourse.SpringCourseRestApp.models.Sensor;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.services.SensorService;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.SensorErrorResponse;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.SensorNotCreatedException;
+import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.SensorValidator;
 
 import java.util.List;
 
@@ -22,14 +23,19 @@ public class SensorController {
     private final SensorService sensorService;
     private final ModelMapper modelMapper;
 
-    public SensorController(SensorService sensorService, ModelMapper modelMapper) {
+    private final SensorValidator sensorValidator;
+
+    public SensorController(SensorService sensorService, ModelMapper modelMapper, SensorValidator validator) {
         this.sensorService = sensorService;
         this.modelMapper = modelMapper;
+        this.sensorValidator = validator;
     }
 
     @PostMapping("/registration")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid SensorDTO sensorDTO,
                                              BindingResult bindingResult) {
+
+        sensorValidator.validate(convertedToSensor(sensorDTO), bindingResult);
 
         if(bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();
@@ -51,6 +57,7 @@ public class SensorController {
     private Sensor convertedToSensor(SensorDTO sensorDTO) {
         return modelMapper.map(sensorDTO, Sensor.class);
     }
+
 
     @ExceptionHandler
     private ResponseEntity<SensorErrorResponse> handleException(SensorNotCreatedException e) {
