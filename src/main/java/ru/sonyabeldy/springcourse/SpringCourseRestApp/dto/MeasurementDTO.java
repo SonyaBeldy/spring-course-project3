@@ -1,13 +1,19 @@
 package ru.sonyabeldy.springcourse.SpringCourseRestApp.dto;
 
+import jakarta.validation.constraints.*;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.models.Sensor;
 
 public class MeasurementDTO {
 
+    @NotNull(message = "Value should not be empty")
+    @Min(value = -100, message = "Value should be more than -100")
+    @Max(value = 100, message = "Value should be less than 100")
     private double value;
-//    @NotEmpty(message = "Raining should not be empty")
+
+    @NotNull(message = "Raining should not be empty")
     private boolean isRaining;
 
+    @NotNull(message = "Sensor should not be empty")
     private Sensor sensor;
 
     public double getValue() {

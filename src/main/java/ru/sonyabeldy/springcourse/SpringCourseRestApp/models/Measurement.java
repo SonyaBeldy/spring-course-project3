@@ -1,6 +1,7 @@
 package ru.sonyabeldy.springcourse.SpringCourseRestApp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "Measurement")
@@ -12,15 +13,21 @@ public class Measurement {
     private int id;
 
     @Column(name = "value")
+    @NotNull(message = "Value should not be empty")
+    @Min(value = -100, message = "Value should be more than -100")
+    @Max(value = 100, message = "Value should be less than 100")
     private double value;
 
     @Column(name = "is_raining")
-//    @NotEmpty(message = "Raining should not be empty")
+    @NotNull(message = "Raining should not be empty")
     private boolean isRaining;
 
     @ManyToOne
     @JoinColumn(name = "sensor_id", referencedColumnName = "id")
+    @NotNull(message = "Sensor should nor be empty")
     private Sensor sensor;
+
+
 
     public Measurement() {
     }

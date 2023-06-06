@@ -1,5 +1,6 @@
 package ru.sonyabeldy.springcourse.SpringCourseRestApp.controllers;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,16 +35,25 @@ public class MeasurementController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<HttpStatus> create(@RequestBody MeasurementDTO measurementDTO,
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid MeasurementDTO measurementDTO,
                                              BindingResult bindingResult) {
 
         Measurement measurement = convertedToMeasurement(measurementDTO);
+
+        checkBindingResults(bindingResult);
+
         measurementValidator.validate(measurement, bindingResult);
+        checkBindingResults(bindingResult);
 
+        measurementService.save(convertedToMeasurement(measurementDTO), sensorService.get(measurementDTO.getSensor().getName()).orElseThrow());
+        return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
+    private void checkBindingResults(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-           StringBuilder errorMsg = new StringBuilder();
+            StringBuilder errorMsg = new StringBuilder();
 
-           List<FieldError> errors = bindingResult.getFieldErrors();
+            List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
                 errorMsg.append(error.getField())
                         .append(" - ").append(error.getDefaultMessage())
@@ -52,10 +62,6 @@ public class MeasurementController {
 
             throw new MeasurementNotCreatedException(errorMsg.toString());
         }
-
-        measurementService.save(convertedToMeasurement(measurementDTO), sensorService.get(measurementDTO.getSensor().getName()).orElseThrow());
-
-        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @GetMapping

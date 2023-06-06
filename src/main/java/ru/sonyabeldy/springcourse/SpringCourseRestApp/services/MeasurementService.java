@@ -23,6 +23,7 @@ public class MeasurementService {
     @Transactional
     public void save(Measurement measurement, Sensor sensor) {
         measurement.setSensor(sensor);
+
         measurementRepository.save(measurement);
     }
 
