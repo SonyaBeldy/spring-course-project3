@@ -4,11 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.dto.MeasurementDTO;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.models.Measurement;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.services.MeasurementService;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.services.SensorService;
+import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementErrorResponse;
+import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementNotCreatedException;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementValidator;
 
 import java.util.List;
@@ -37,6 +40,19 @@ public class MeasurementController {
         Measurement measurement = convertedToMeasurement(measurementDTO);
         measurementValidator.validate(measurement, bindingResult);
 
+        if (bindingResult.hasErrors()) {
+           StringBuilder errorMsg = new StringBuilder();
+
+           List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors) {
+                errorMsg.append(error.getField())
+                        .append(" - ").append(error.getDefaultMessage())
+                        .append("; ");
+            }
+
+            throw new MeasurementNotCreatedException(errorMsg.toString());
+        }
+
         measurementService.save(convertedToMeasurement(measurementDTO), sensorService.get(measurementDTO.getSensor().getName()).orElseThrow());
 
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -45,6 +61,16 @@ public class MeasurementController {
     @GetMapping
     public List<Measurement> getMeasurements() {
         return measurementService.findAll();
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<MeasurementErrorResponse> handlerException(MeasurementNotCreatedException e) {
+        MeasurementErrorResponse response = new MeasurementErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     private Measurement convertedToMeasurement(MeasurementDTO measurementDTO) {
