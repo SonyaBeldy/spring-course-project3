@@ -3,6 +3,8 @@ package ru.sonyabeldy.springcourse.SpringCourseRestApp.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "Measurement")
 public class Measurement {

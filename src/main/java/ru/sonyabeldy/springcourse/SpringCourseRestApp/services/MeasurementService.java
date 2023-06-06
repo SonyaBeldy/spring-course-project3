@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.models.Measurement;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.repositories.MeasurementRepository;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class MeasurementService {
@@ -23,4 +25,7 @@ public class MeasurementService {
     }
 
 
+    public List<Measurement> findAll() {
+        return measurementRepository.findAll();
+    }
 }

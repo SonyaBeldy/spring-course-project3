@@ -3,13 +3,12 @@ package ru.sonyabeldy.springcourse.SpringCourseRestApp.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.dto.MeasurementDTO;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.models.Measurement;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.services.MeasurementService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/measurements")
@@ -30,6 +29,11 @@ public class MeasurementController {
         measurementService.save(convertedToMeasurement(measurementDTO));
 
         return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public List<Measurement> getMeasurements() {
+        return measurementService.findAll();
     }
 
     private Measurement convertedToMeasurement(MeasurementDTO measurementDTO) {
