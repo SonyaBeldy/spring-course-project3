@@ -1,21 +1,22 @@
 package ru.sonyabeldy.springcourse.SpringCourseRestApp.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotEmpty;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.models.Sensor;
 
 public class MeasurementDTO {
 
+    private double value;
 //    @NotEmpty(message = "Raining should not be empty")
     private boolean isRaining;
 
-    private Sensor owner;
+    private Sensor sensor;
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
 
     public boolean isRaining() {
         return isRaining;
@@ -25,11 +26,11 @@ public class MeasurementDTO {
         isRaining = raining;
     }
 
-    public Sensor getOwner() {
-        return owner;
+    public Sensor getSensor() {
+        return sensor;
     }
 
-    public void setOwner(Sensor owner) {
-        this.owner = owner;
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
     }
 }

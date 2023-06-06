@@ -1,9 +1,6 @@
 package ru.sonyabeldy.springcourse.SpringCourseRestApp.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Measurement")
@@ -23,7 +20,7 @@ public class Measurement {
 
     @ManyToOne
     @JoinColumn(name = "sensor_id", referencedColumnName = "id")
-    private Sensor owner;
+    private Sensor sensor;
 
     public Measurement() {
     }
@@ -44,12 +41,12 @@ public class Measurement {
         isRaining = raining;
     }
 
-    public Sensor getOwner() {
-        return owner;
+    public Sensor getSensor() {
+        return sensor;
     }
 
-    public void setOwner(Sensor owner) {
-        this.owner = owner;
+    public void setSensor(Sensor owner) {
+        this.sensor = owner;
     }
 
     public double getValue() {
