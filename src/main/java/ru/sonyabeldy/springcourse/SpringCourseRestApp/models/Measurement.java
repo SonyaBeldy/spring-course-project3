@@ -3,6 +3,9 @@ package ru.sonyabeldy.springcourse.SpringCourseRestApp.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 @Entity
 @Table(name = "Measurement")
 public class Measurement {
@@ -27,7 +30,9 @@ public class Measurement {
     @NotNull(message = "Sensor should nor be empty")
     private Sensor sensor;
 
-
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
     public Measurement() {
     }
@@ -62,5 +67,13 @@ public class Measurement {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }
