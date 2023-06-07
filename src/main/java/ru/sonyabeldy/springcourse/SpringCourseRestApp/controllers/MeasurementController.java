@@ -69,6 +69,12 @@ public class MeasurementController {
         return measurementService.findAll();
     }
 
+    @GetMapping("/rainyDaysCount")
+    public ResponseEntity<String> getRainyDaysCount() {
+        String countMsg = "Rainy days count: " + measurementService.countRainyDays();
+        return new ResponseEntity<>(countMsg, HttpStatus.OK);
+    }
+
     @ExceptionHandler
     private ResponseEntity<MeasurementErrorResponse> handlerException(MeasurementNotCreatedException e) {
         MeasurementErrorResponse response = new MeasurementErrorResponse(
@@ -78,6 +84,8 @@ public class MeasurementController {
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+
 
     private Measurement convertedToMeasurement(MeasurementDTO measurementDTO) {
         return modelMapper.map(measurementDTO, Measurement.class);
