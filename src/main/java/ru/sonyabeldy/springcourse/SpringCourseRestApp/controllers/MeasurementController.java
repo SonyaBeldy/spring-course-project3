@@ -16,6 +16,7 @@ import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementNotCreate
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementValidator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/measurements")
@@ -38,14 +39,14 @@ public class MeasurementController {
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid MeasurementDTO measurementDTO,
                                              BindingResult bindingResult) {
 
-        Measurement measurement = convertedToMeasurement(measurementDTO);
+        Measurement measurement = convertToMeasurement(measurementDTO);
 
         checkBindingResults(bindingResult);
 
         measurementValidator.validate(measurement, bindingResult);
         checkBindingResults(bindingResult);
 
-        measurementService.save(convertedToMeasurement(measurementDTO), sensorService.get(measurementDTO.getSensor().getName()).orElseThrow());
+        measurementService.save(convertToMeasurement(measurementDTO), sensorService.get(measurementDTO.getSensor().getName()).orElseThrow());
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
@@ -65,8 +66,9 @@ public class MeasurementController {
     }
 
     @GetMapping
-    public List<Measurement> getMeasurements() {
-        return measurementService.findAll();
+    public List<MeasurementDTO> getMeasurements() {
+        return measurementService.findAll().stream().map(this::convertToMeasurementDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/rainyDaysCount")
@@ -87,7 +89,12 @@ public class MeasurementController {
 
 
 
-    private Measurement convertedToMeasurement(MeasurementDTO measurementDTO) {
+    private Measurement convertToMeasurement(MeasurementDTO measurementDTO) {
         return modelMapper.map(measurementDTO, Measurement.class);
     }
+
+    private MeasurementDTO convertToMeasurementDTO(Measurement measurement) {
+        return modelMapper.map(measurement, MeasurementDTO.class);
+    }
+
 }
