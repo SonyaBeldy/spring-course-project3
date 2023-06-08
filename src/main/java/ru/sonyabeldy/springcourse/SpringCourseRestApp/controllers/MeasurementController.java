@@ -14,6 +14,7 @@ import ru.sonyabeldy.springcourse.SpringCourseRestApp.services.SensorService;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementErrorResponse;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementNotCreatedException;
 import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.MeasurementValidator;
+import ru.sonyabeldy.springcourse.SpringCourseRestApp.utils.RainyDaysResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,9 +73,9 @@ public class MeasurementController {
     }
 
     @GetMapping("/rainyDaysCount")
-    public ResponseEntity<String> getRainyDaysCount() {
-        String countMsg = "Rainy days count: " + measurementService.countRainyDays();
-        return new ResponseEntity<>(countMsg, HttpStatus.OK);
+    public RainyDaysResponse getRainyDaysCount() {
+//        String countMsg = "Rainy days count: " + measurementService.countRainyDays();
+        return new RainyDaysResponse(measurementService.countRainyDays());
     }
 
     @ExceptionHandler
